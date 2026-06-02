@@ -1,0 +1,83 @@
+/*
+ * Arrowix OS - Freestanding memory/string primitives.
+ */
+
+#include <arrowix/string.h>
+
+void *memset(void *dst, int value, size_t n)
+{
+    u8 *d = (u8 *) dst;
+    for (size_t i = 0; i < n; ++i) {
+        d[i] = (u8) value;
+    }
+    return dst;
+}
+
+void *memcpy(void *dst, const void *src, size_t n)
+{
+    u8 *d = (u8 *) dst;
+    const u8 *s = (const u8 *) src;
+    for (size_t i = 0; i < n; ++i) {
+        d[i] = s[i];
+    }
+    return dst;
+}
+
+void *memmove(void *dst, const void *src, size_t n)
+{
+    u8 *d = (u8 *) dst;
+    const u8 *s = (const u8 *) src;
+    if (d == s || n == 0) {
+        return dst;
+    }
+    if (d < s) {
+        for (size_t i = 0; i < n; ++i) {
+            d[i] = s[i];
+        }
+    } else {
+        for (size_t i = n; i > 0; --i) {
+            d[i - 1] = s[i - 1];
+        }
+    }
+    return dst;
+}
+
+int memcmp(const void *a, const void *b, size_t n)
+{
+    const u8 *pa = (const u8 *) a;
+    const u8 *pb = (const u8 *) b;
+    for (size_t i = 0; i < n; ++i) {
+        if (pa[i] != pb[i]) {
+            return (int) pa[i] - (int) pb[i];
+        }
+    }
+    return 0;
+}
+
+size_t strlen(const char *s)
+{
+    size_t n = 0;
+    while (s[n] != '\0') {
+        ++n;
+    }
+    return n;
+}
+
+int strcmp(const char *a, const char *b)
+{
+    while (*a && (*a == *b)) {
+        ++a;
+        ++b;
+    }
+    return (int) (u8) *a - (int) (u8) *b;
+}
+
+int strncmp(const char *a, const char *b, size_t n)
+{
+    for (size_t i = 0; i < n; ++i) {
+        if (a[i] != b[i] || a[i] == '\0') {
+            return (int) (u8) a[i] - (int) (u8) b[i];
+        }
+    }
+    return 0;
+}
